@@ -13,6 +13,17 @@ I’m using this space to document the problem definition, experiments, results,
 
 ---
 
+## Execution plan (how I’ll run this)
+I’m running this capstone like a small real project: short weekly sprints, reproducible experiments, and a clear “done” definition.
+
+- **Weekly rhythm:** 4 short sessions + 1 longer deep-work session
+- **Milestones:** EDA → baseline + proper validation → features/models → tuning + error analysis → final clean write-up
+- **Experiment tracking:** simple log + Git commits per change (no “mystery improvements”)
+- **Validation:** split by event/time to avoid leakage (no random row splitting)
+- **Risks I’m managing:** leakage, overfitting, endless tuning
+- **What’s public:** code, notes, plots, write-up (no proprietary data)
+
+
 ## Why this is interesting
 In live race operations, even small changes in water conditions or race context can affect lap times and safety decisions. A practical predictive model could help:
 - Produce pre-session “expected pace” ranges
