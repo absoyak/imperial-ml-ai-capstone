@@ -1,6 +1,9 @@
 # NumPy data files
 *.npy
 
+#Weekly Data Update Files
+*.txt
+
 # Local data folders
 initial_data/
 capstone/data/raw/
@@ -16,3 +19,4 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
