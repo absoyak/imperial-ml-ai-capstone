@@ -1,15 +1,81 @@
-## Data availability
+# Black-Box Optimisation (BBO) Capstone Project
 
-The initial input–output observations used in this project are provided by the course organisers as NumPy (`.npy`) files via the Imperial College ML & AI programme platform.
+## Project Overview
 
-These data files are not included in this repository, in line with the course submission guidelines and GitHub best practices for handling data.
+This project tackles a black-box optimisation problem where the objective functions are unknown and can only be evaluated through limited queries. The goal is to maximise each function efficiently while keeping the number of evaluations low.
 
-To reproduce the experiments:
-1. Download the initial data from the course platform.
-2. Place each function’s data in a local directory structured as:
-   `initial_data/function_X/initial_inputs.npy`
-   and
-   `initial_data/function_X/initial_outputs.npy`
-3. Update local paths if required before running the optimisation scripts.
+The challenge reflects real-world ML scenarios: expensive evaluations, unknown structure, sparse data, and the need to adapt strategy iteratively rather than search blindly.
 
-The optimisation code assumes no access to the internal structure of the objective functions and treats them strictly as black-box evaluations.
+Weekly progress is documented in:
+- reports/week_01.md
+- reports/week_02.md
+- reports/week_03.md (to be updated after results)
+
+---
+
+## Inputs and Outputs
+
+Each function receives an input vector:
+
+x1 – x2 – ... – xn
+
+where:
+- xi ∈ [0, 1)
+- Values are specified to six decimal places
+- Dimensionality ranges from 2D to 8D
+
+The output is a scalar value.  
+The objective is to maximise this value using a limited number of queries.
+
+Main constraints:
+- Unknown function structure
+- Strongly varying output scales
+- Severe sparsity in higher dimensions
+
+---
+
+## Objective
+
+The aim is to maximise all eight functions with minimal queries. Since the functions are black-box, all decisions rely on surrogate modelling and acquisition strategies.
+
+Key challenges include:
+- Curse of dimensionality (especially 6D–8D)
+- Balancing exploration and exploitation
+- Avoiding overfitting with limited data
+
+---
+
+## Technical Approach
+
+Week 1:  
+Implemented a Gaussian Process (RBF kernel) and tested multiple acquisition strategies (UCB, Variance, PI). Cherry-picked the strongest suggestions per function to establish a baseline.
+
+Week 2:  
+Refined the GP model and tailored acquisition strategies per function. Exploited promising regions (e.g., F2, F7) and explored uncertain ones (e.g., F4, F6). This week highlighted scale differences and sparsity issues in high dimensions.
+
+Week 3:  
+Adopted a hybrid strategy:
+- Re-exploit strong candidates that slightly regressed
+- Increase exploration in unstable or poorly understood regions
+- Use Expected Improvement for refinement
+- Use variance-driven sampling where uncertainty dominates
+
+The approach is now function-specific rather than uniform.
+
+---
+
+## SVM Perspective
+
+Although the optimisation framework is GP-based, SVM concepts from Module 14 influence the strategy. A soft-margin SVM could classify high- vs low-performance regions and help restrict the search space before regression refinement. Kernel methods are particularly relevant for non-linear response surfaces.
+
+A hybrid SVM + GP approach may become useful as more data accumulates.
+
+---
+
+## Reflection
+
+This project is less about finding the perfect model and more about structured decision-making under uncertainty. Each round forces reassessment of assumptions and strategic adjustment.
+
+The focus is disciplined iteration: model, test, adapt.
+
+The code stays simple. The strategy evolves.
