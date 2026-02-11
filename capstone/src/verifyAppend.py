@@ -2,6 +2,25 @@ import numpy as np
 from pathlib import Path
 from typing import List, Tuple
 
+def extractTopLevelBracketBlocks(text: str) -> list[str]:
+    blocks: list[str] = []
+    depth: int = 0
+    startIndex: int = -1
+
+    for i, ch in enumerate(text):
+        if ch == "[":
+            if depth == 0:
+                startIndex = i
+            depth += 1
+        elif ch == "]":
+            if depth > 0:
+                depth -= 1
+                if depth == 0 and startIndex != -1:
+                    blocks.append(text[startIndex:i + 1])
+                    startIndex = -1
+
+    return blocks
+
 
 def loadWeeklyTxtFiles(scriptFolder: Path) -> Tuple[List[np.ndarray], List[float]]:
     inputsPath: Path = scriptFolder / "inputs.txt"
@@ -12,8 +31,8 @@ def loadWeeklyTxtFiles(scriptFolder: Path) -> Tuple[List[np.ndarray], List[float
     if not outputsPath.is_file():
         raise FileNotFoundError(str(outputsPath))
 
-    inputsText: str = inputsPath.read_text(encoding="utf-8").strip()
-    outputsText: str = outputsPath.read_text(encoding="utf-8").strip()
+    inputsText: str = inputsPath.read_text(encoding="utf-8")
+    outputsText: str = outputsPath.read_text(encoding="utf-8")
 
     safeGlobals = {
         "__builtins__": {},
@@ -21,16 +40,30 @@ def loadWeeklyTxtFiles(scriptFolder: Path) -> Tuple[List[np.ndarray], List[float
         "np": np
     }
 
-    weeklyInputsRaw = eval(inputsText, safeGlobals, {})
-    weeklyOutputsRaw = eval(outputsText, safeGlobals, {})
+    inputBlocks = extractTopLevelBracketBlocks(inputsText)
+    outputBlocks = extractTopLevelBracketBlocks(outputsText)
 
-    weeklyInputs: List[np.ndarray] = [np.asarray(v, dtype=np.float64).reshape(-1) for v in weeklyInputsRaw]
-    weeklyOutputs: List[float] = [float(v) for v in weeklyOutputsRaw]
+    if len(inputBlocks) == 0 or len(outputBlocks) == 0:
+        raise ValueError("No valid list blocks found")
+
+    # Son blok = son hafta
+    weeklyInputsRaw = eval(inputBlocks[-1], safeGlobals, {})
+    weeklyOutputsRaw = eval(outputBlocks[-1], safeGlobals, {})
+
+    weeklyInputs: List[np.ndarray] = [
+        np.asarray(v, dtype=np.float64).reshape(-1)
+        for v in weeklyInputsRaw
+    ]
+
+    weeklyOutputs: List[float] = [
+        float(v) for v in weeklyOutputsRaw
+    ]
 
     if len(weeklyInputs) != 8 or len(weeklyOutputs) != 8:
-        raise ValueError("Expected exactly 8 inputs and 8 outputs in weekly txt files")
+        raise ValueError("Expected exactly 8 inputs and 8 outputs")
 
     return weeklyInputs, weeklyOutputs
+
 
 
 def fmtVector(v: np.ndarray) -> str:
