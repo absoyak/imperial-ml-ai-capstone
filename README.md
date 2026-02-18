@@ -9,7 +9,8 @@ The challenge reflects real-world ML scenarios: expensive evaluations, unknown s
 Weekly progress is documented in:
 - reports/week_01.md
 - reports/week_02.md
-- reports/week_03.md (to be updated after results)
+- reports/week_03.md
+- reports/week_04.md (to be updated after results)
 
 ---
 
@@ -62,6 +63,26 @@ Adopted a hybrid strategy:
 
 The approach is now function-specific rather than uniform.
 
+Week 4:  
+Introduced function-specific stabilisation and hyperparameter refinement.
+
+Key updates:
+- Applied target normalisation (z-score) before GP fitting for numerical stability.
+- Adjusted kernel length scale and noise level selectively per function.
+- Introduced controlled exploitation using UCB for unstable functions (notably F2).
+- Increased local candidate concentration around top-performing regions.
+- Reduced aggressive exploration in sensitive functions.
+
+Function 2 required dedicated handling after performance drift in Weeks 2–3.  
+Stabilisation steps included:
+- Custom kernel length scale
+- Increased noise level
+- Moderate UCB kappa
+- Concentrated local sampling
+
+The strategy is now explicitly adaptive per function rather than globally configured.
+
+
 ---
 
 ## SVM Perspective
@@ -79,3 +100,14 @@ This project is less about finding the perfect model and more about structured d
 The focus is disciplined iteration: model, test, adapt.
 
 The code stays simple. The strategy evolves.
+
+Week 4 marked a transition from generic Bayesian optimisation to adaptive, function-aware optimisation. Stability and controlled exploitation became as important as exploration, especially in higher dimensions.
+
+## Neural Network Perspective
+
+Although the current surrogate remains Gaussian Process-based, insights from neural networks and backpropagation influence the strategy. 
+
+Hyperparameter sensitivity (learning rate, model capacity, regularisation) reinforced the importance of stability and controlled updates in optimisation.
+
+Future iterations may explore neural network surrogates with gradient-informed query steps, particularly for higher-dimensional functions (6D–8D).
+
