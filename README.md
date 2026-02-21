@@ -10,7 +10,7 @@ Weekly progress is documented in:
 - reports/week_01.md
 - reports/week_02.md
 - reports/week_03.md
-- reports/week_04.md (to be updated after results)
+- reports/week_04.md
 
 ---
 
