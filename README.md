@@ -82,6 +82,18 @@ Stabilisation steps included:
 
 The strategy is now explicitly adaptive per function rather than globally configured.
 
+Week 5:
+Focused on code quality improvements and F2 stabilisation.
+
+- Applied scipy-accelerated normal CDF for faster GP inference
+- Activated y-normalisation (previously dead code) for stable GP fitting
+- Resolved F2 surrogate miscalibration: restricted candidate sampling 
+  to single best-observed centre with tighter local std and larger 
+  length scale to prevent extrapolation artefacts
+- Cleaned up redundant operations (double-clip, duplicate centre stacking)
+
+F2 suggestion now correctly targets the high-value region identified in Week 1.
+F5 continues strong exploitation with GP predicting above 2400.
 
 ---
 
