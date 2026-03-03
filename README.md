@@ -2,124 +2,195 @@
 
 ## Project Overview
 
-This project tackles a black-box optimisation problem where the objective functions are unknown and can only be evaluated through limited queries. The goal is to maximise each function efficiently while keeping the number of evaluations low.
+This project addresses a constrained black-box optimisation problem in which objective functions are unknown and can only be evaluated through limited, expensive queries.
 
-The challenge reflects real-world ML scenarios: expensive evaluations, unknown structure, sparse data, and the need to adapt strategy iteratively rather than search blindly.
+The goal is to maximise each function efficiently while minimising evaluations.  
+The setup mirrors real-world ML deployment scenarios:
+
+- Expensive evaluations
+- Unknown functional structure
+- Sparse and noisy observations
+- Limited query budgets
 
 Weekly progress is documented in:
+
 - reports/week_01.md
 - reports/week_02.md
 - reports/week_03.md
 - reports/week_04.md
+- reports/week_05.md
+- reports/week_06.md (soon)
 
 ---
 
-## Inputs and Outputs
+## Problem Setting
 
 Each function receives an input vector:
 
 x1 – x2 – ... – xn
 
-where:
+Where:
 - xi ∈ [0, 1)
-- Values are specified to six decimal places
+- Six decimal precision
 - Dimensionality ranges from 2D to 8D
 
-The output is a scalar value.  
-The objective is to maximise this value using a limited number of queries.
+The output is a scalar value to be maximised.
 
-Main constraints:
-- Unknown function structure
-- Strongly varying output scales
+Constraints include:
+
+- Unknown function form
+- Strongly varying output magnitudes
 - Severe sparsity in higher dimensions
+- Limited query budget (15 total observations)
 
 ---
 
-## Objective
+## Theoretical Foundations
 
-The aim is to maximise all eight functions with minimal queries. Since the functions are black-box, all decisions rely on surrogate modelling and acquisition strategies.
+The optimisation framework is based on **Bayesian Optimisation** using a Gaussian Process (GP) surrogate model.
 
-Key challenges include:
-- Curse of dimensionality (especially 6D–8D)
-- Balancing exploration and exploitation
-- Avoiding overfitting with limited data
+Key references informing this design:
 
----
+- Rasmussen & Williams (2006) — *Gaussian Processes for Machine Learning*
+- Jones et al. (1998) — *Efficient Global Optimization (EGO)*
+- Srinivas et al. (2010) — *Gaussian Process Upper Confidence Bound (GP-UCB)*
 
-## Technical Approach
+Bayesian optimisation is particularly suitable for:
 
-Week 1:  
-Implemented a Gaussian Process (RBF kernel) and tested multiple acquisition strategies (UCB, Variance, PI). Cherry-picked the strongest suggestions per function to establish a baseline.
+- Expensive black-box functions
+- Low to moderate data regimes
+- Problems requiring uncertainty-aware decisions
 
-Week 2:  
-Refined the GP model and tailored acquisition strategies per function. Exploited promising regions (e.g., F2, F7) and explored uncertain ones (e.g., F4, F6). This week highlighted scale differences and sparsity issues in high dimensions.
-
-Week 3:  
-Adopted a hybrid strategy:
-- Re-exploit strong candidates that slightly regressed
-- Increase exploration in unstable or poorly understood regions
-- Use Expected Improvement for refinement
-- Use variance-driven sampling where uncertainty dominates
-
-The approach is now function-specific rather than uniform.
-
-Week 4:  
-Introduced function-specific stabilisation and hyperparameter refinement.
-
-Key updates:
-- Applied target normalisation (z-score) before GP fitting for numerical stability.
-- Adjusted kernel length scale and noise level selectively per function.
-- Introduced controlled exploitation using UCB for unstable functions (notably F2).
-- Increased local candidate concentration around top-performing regions.
-- Reduced aggressive exploration in sensitive functions.
-
-Function 2 required dedicated handling after performance drift in Weeks 2–3.  
-Stabilisation steps included:
-- Custom kernel length scale
-- Increased noise level
-- Moderate UCB kappa
-- Concentrated local sampling
-
-The strategy is now explicitly adaptive per function rather than globally configured.
-
-Week 5:
-Focused on code quality improvements and F2 stabilisation.
-
-- Applied scipy-accelerated normal CDF for faster GP inference
-- Activated y-normalisation (previously dead code) for stable GP fitting
-- Resolved F2 surrogate miscalibration: restricted candidate sampling 
-  to single best-observed centre with tighter local std and larger 
-  length scale to prevent extrapolation artefacts
-- Cleaned up redundant operations (double-clip, duplicate centre stacking)
-
-F2 suggestion now correctly targets the high-value region identified in Week 1.
-F5 continues strong exploitation with GP predicting above 2400.
+The surrogate model approximates the unknown function, while acquisition functions guide exploration vs exploitation.
 
 ---
 
-## SVM Perspective
+## Surrogate Model
 
-Although the optimisation framework is GP-based, SVM concepts from Module 14 influence the strategy. A soft-margin SVM could classify high- vs low-performance regions and help restrict the search space before regression refinement. Kernel methods are particularly relevant for non-linear response surfaces.
+A Gaussian Process with an RBF (squared exponential) kernel is used.
 
-A hybrid SVM + GP approach may become useful as more data accumulates.
+Key implementation features:
+
+- Cholesky decomposition for numerical stability
+- Target normalisation (z-score) prior to GP fitting
+- Function-specific kernel length scales
+- Selective noise regularisation
+- Explicit variance clipping for stability
+
+The GP was implemented manually (NumPy-based) rather than using scikit-learn to:
+
+- Retain full control over acquisition behaviour
+- Modify hyperparameters per function
+- Improve interpretability of surrogate dynamics
+
+---
+
+## Acquisition Strategies
+
+Multiple acquisition functions are implemented:
+
+- Expected Improvement (EI)
+- Upper Confidence Bound (UCB)
+- Variance sampling
+- Spread-based maximin sampling (Week 6 addition)
+
+Each function uses a tailored acquisition configuration.
+
+Exploration–exploitation balance is adjusted per landscape:
+
+- EI for aggressive local refinement
+- UCB for uncertainty-aware recovery
+- Variance for exploration-dominant cases
+- Spread sampling for flat/degenerate surfaces (Function 1)
+
+---
+
+## Evolution of Strategy
+
+### Week 1–2  
+Baseline GP with mixed acquisition functions.  
+Exploration-heavy to understand global structure.
+
+### Week 3  
+Hybrid strategy. Function-specific adjustments introduced.
+
+### Week 4  
+Stabilisation phase.
+
+- Target normalisation activated
+- Function-specific kernel tuning
+- Controlled UCB recovery for unstable functions
+- Increased local sampling density
+
+### Week 5  
+Refinement and code quality improvements.
+
+- Fixed surrogate miscalibration in Function 2
+- Restricted sampling to dominant centre
+- Cleaned numerical redundancies
+- Improved GP inference stability
+
+Function 5 and Function 7 showed consistent improvement.
+
+### Week 6  
+Strategic divergence by function:
+
+- Preserved aggressive exploitation for F5, F7, F8
+- Reintroduced uncertainty-guided recovery for F2 (UCB with moderate kappa)
+- Introduced spread-based sampling for F1 (maximin distance strategy)
+- Reduced over-exploitation in F6
+
+The optimisation is now explicitly landscape-aware rather than globally configured.
+
+---
+
+## Design Trade-offs
+
+This project explicitly balances:
+
+- Exploration vs exploitation
+- Surrogate confidence vs model overconfidence
+- Stability vs aggressive peak-seeking
+- Global coverage vs trust-region refinement
+
+High-dimensional functions (6D–8D) required tighter local refinement and controlled uncertainty handling.
+
+---
+
+## Relation to CNN Concepts
+
+Concepts from neural network training influenced optimisation decisions:
+
+- Overfitting parallels excessive exploitation
+- Regularisation parallels GP noise tuning
+- Model capacity parallels kernel length scale
+- Progressive feature extraction parallels progressive landscape refinement
+
+The optimisation process increasingly mirrors structured model refinement seen in deep learning systems.
+
+---
+
+## Future Extensions
+
+Potential next steps include:
+
+- Neural network surrogate models
+- Trust-region Bayesian Optimisation (TuRBO)
+- Random embeddings for high-dimensional BO
+- Automatic hyperparameter optimisation of the surrogate
+- Comparative benchmarking against scikit-learn GP
 
 ---
 
 ## Reflection
 
-This project is less about finding the perfect model and more about structured decision-making under uncertainty. Each round forces reassessment of assumptions and strategic adjustment.
+This project demonstrates structured decision-making under uncertainty rather than brute-force search.
 
-The focus is disciplined iteration: model, test, adapt.
+The code remains intentionally simple.
+The strategy evolves through evidence-driven iteration.
 
-The code stays simple. The strategy evolves.
+The optimisation process transitioned from generic Bayesian optimisation
+to adaptive, function-aware, uncertainty-calibrated search.
 
-Week 4 marked a transition from generic Bayesian optimisation to adaptive, function-aware optimisation. Stability and controlled exploitation became as important as exploration, especially in higher dimensions.
-
-## Neural Network Perspective
-
-Although the current surrogate remains Gaussian Process-based, insights from neural networks and backpropagation influence the strategy. 
-
-Hyperparameter sensitivity (learning rate, model capacity, regularisation) reinforced the importance of stability and controlled updates in optimisation.
-
-Future iterations may explore neural network surrogates with gradient-informed query steps, particularly for higher-dimensional functions (6D–8D).
-
+Performance gains in F5 and F7 validate the exploit-refine strategy.
+Instabilities in F2 illustrate the importance of uncertainty-aware recovery.
