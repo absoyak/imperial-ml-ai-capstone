@@ -19,7 +19,8 @@ Weekly progress is documented in:
 - reports/week_03.md
 - reports/week_04.md
 - reports/week_05.md
-- reports/week_06.md (soon)
+- reports/week_06.md
+- reports/week_07.md (soon)
 
 ---
 
@@ -135,12 +136,21 @@ Function 5 and Function 7 showed consistent improvement.
 ### Week 6  
 Strategic divergence by function:
 
-- Preserved aggressive exploitation for F5, F7, F8
-- Reintroduced uncertainty-guided recovery for F2 (UCB with moderate kappa)
-- Introduced spread-based sampling for F1 (maximin distance strategy)
-- Reduced over-exploitation in F6
+- Preserved aggressive exploitation for F5 and F7 using Expected Improvement
+- Reintroduced uncertainty-guided recovery for F2 using UCB with moderate kappa
+- Introduced spread-based sampling for F1 after repeated near-zero outputs
+- Applied uncertainty-driven exploration for F4 which resulted in a major improvement
 
-The optimisation is now explicitly landscape-aware rather than globally configured.
+Notable outcomes:
+
+- **Function 5 achieved the strongest improvement so far**, expanding from
+  2603.66 to **3555.59**, confirming a strong peak near the search boundary.
+- **Function 4 recovered dramatically**, moving from approximately −2.08
+  to **0.41**, suggesting successful escape from a poor region.
+- **Function 7 continued steady refinement** (2.69 → 2.73).
+- **Function 2 partially recovered** after switching back to uncertainty-aware exploration.
+
+The optimisation is now clearly landscape-aware rather than globally configured.
 
 ---
 
@@ -194,3 +204,7 @@ to adaptive, function-aware, uncertainty-calibrated search.
 
 Performance gains in F5 and F7 validate the exploit-refine strategy.
 Instabilities in F2 illustrate the importance of uncertainty-aware recovery.
+
+The full project implementation and weekly reports are available on GitHub:
+
+https://github.com/absoyak/imperial-ml-ai-capstone

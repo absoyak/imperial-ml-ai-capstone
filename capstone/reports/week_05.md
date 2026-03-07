@@ -1,67 +1,75 @@
-# Week 4 — Stabilisation and Function-Specific Tuning
+# Week 5 — Aggressive Local Refinement and Peak Expansion
 
 ## Overview
 
-Week 4 focused on stabilisation and controlled exploitation.
+Week 5 focused on aggressive local refinement in confirmed high-performing regions,
+while attempting recovery in unstable functions.
 
-After the mixed results of Week 3, particularly the drift observed in Function 2,
-this iteration introduced explicit function-specific tuning rather than relying
-on a uniform Gaussian Process configuration.
+Following the strong improvements of Week 4, the strategy shifted further toward
+controlled exploitation in functions that demonstrated consistent upward trends,
+particularly in higher dimensions.
 
-Key changes included:
-- Target normalisation before GP fitting
-- Adjusted kernel length scale and noise level for sensitive functions
-- More concentrated local candidate sampling
-- Controlled UCB-based exploitation where necessary
+Key adjustments included:
+- Extremely concentrated local sampling for high-performing functions
+- Expected Improvement (EI) as the primary refinement mechanism
+- Limited exploration for functions with weak or flat signals
+- Continued function-specific kernel and acquisition tuning
 
-The objective was to reduce instability while preserving exploration where beneficial.
+The primary objective was to maximise gains in confirmed promising regions
+while testing whether unstable functions (notably F2 and F6) could recover.
 
 ---
 
 ## Selected Queries and Results
 
-| Function | Selected Input | Output | Acquisition Used | Change vs Week 3 |
+| Function | Selected Input | Output | Acquisition Used | Change vs Week 4 |
 |----------|----------------|--------|------------------|------------------|
-| F1 | `[0.000934, 0.005257]` | `~0` | Variance | No change |
-| F2 | `[0.598126, 0.609009]` | `0.1169` | UCB | Decrease |
-| F3 | `[0.386745, 0.401850, 0.488207]` | `-0.0237` | EI | Improvement |
-| F4 | `[0.452635, 0.521431, 0.453934, 0.329808]` | `-2.08` | UCB | Improvement |
-| F5 | `[0.071211, 0.851797, 0.913154, 0.995216]` | `2100.97` | EI | Major improvement |
-| F6 | `[0.709318, 0.290415, 0.606401, 0.757587, 0.058188]` | `-0.4761` | EI | Improvement |
-| F7 | `[0.023913, 0.307314, 0.284348, 0.229396, 0.298611, 0.655896]` | `2.41` | EI | Improvement |
-| F8 | `[0.069838, 0.058892, 0.111458, 0.095078, 0.279214, 0.807952, 0.455800, 0.839821]` | `9.62` | UCB | Slight improvement |
+| F1 | `[0.673459, 0.000722]` | `~0` | Variance | No meaningful change |
+| F2 | `[0.780704, 0.944251]` | `0.0718` | EI | Decrease |
+| F3 | `[0.351520, 0.176589, 0.456402]` | `-0.0312` | EI | Slight decrease |
+| F4 | `[0.414516, 0.372734, 0.513186, 0.304630]` | `-2.08` | UCB | Stable |
+| F5 | `[0.000000, 0.882742, 0.944023, 0.999999]` | `2603.66` | EI | Major improvement |
+| F6 | `[0.698217, 0.271226, 0.498420, 0.760055, 0.138323]` | `-0.6384` | EI | Decrease |
+| F7 | `[0.065907, 0.268693, 0.303928, 0.254584, 0.306775, 0.699677]` | `2.69` | EI | Strong improvement |
+| F8 | `[0.123737, 0.130854, 0.157668, 0.166516, 0.400111, 0.799520, 0.497221, 0.942502]` | `9.64` | UCB | Slight improvement |
 
 ---
 
 ## Summary
 
-Week 4 delivered the strongest overall improvement so far.
+Week 5 delivered the largest single-function improvement so far.
 
-Six out of eight functions improved relative to Week 3.
-The most significant gain occurred in Function 5, which increased from 1418.63 to 2100.97,
-confirming that controlled exploitation in stable high-value regions is highly effective.
+Function 5 increased dramatically from 2100.97 to 2603.66,
+confirming that the aggressive local exploitation strategy is highly effective
+in stable high-value landscapes. The optimiser appears to be expanding the peak
+rather than merely hovering near it.
 
-Functions F6 and F4 also recovered substantially, suggesting that the revised
-kernel and sampling adjustments improved surrogate calibration.
+Function 7 also showed strong upward movement (2.41 → 2.69),
+indicating continued refinement in a well-calibrated region.
 
-Function 7 continued its steady upward trend, reinforcing confidence in that region.
-Function 8 achieved a small but consistent improvement.
+Function 8 achieved a modest but consistent increase, suggesting
+that UCB-based exploration remains productive in that landscape.
 
-Function 2 remains unstable. Despite targeted tuning and controlled UCB exploitation,
-performance did not return to its Week 1 peak. This suggests either:
-- A very narrow optimum region
-- Surrogate miscalibration
-- Or that the initial result may already be near the global maximum
+Function 4 stabilised near its improved Week 4 level,
+while Function 1 continues to show no meaningful signal.
 
-Overall, Week 4 marks a transition from exploratory experimentation
-to stabilised, adaptive optimisation. The strategy is now clearly function-aware,
-with hyperparameters and acquisition behaviour adjusted per landscape.
+However, Functions 2 and 6 remain problematic.
 
-High-dimensional functions (6D–8D) are showing increasing stability,
-indicating that the approach scales better than earlier iterations suggested.
+Function 2 continues to drift away from its Week 1 peak,
+despite attempts at concentrated exploitation. This reinforces the hypothesis that:
+- The optimum region may be extremely narrow, or
+- The surrogate model is miscalibrated in that landscape.
 
-The optimisation process is becoming more disciplined and less reactive.
-Future iterations will likely focus on:
-- Tight local refinement in confirmed strong regions (F5, F7, F8)
-- Targeted recovery attempts in F2
-- Controlled exploration only where uncertainty meaningfully remains
+Function 6 also regressed, indicating that over-exploitation may be occurring
+in a region that is not globally optimal.
+
+Overall, Week 5 confirms that the optimisation framework performs strongly
+in structured and higher-dimensional landscapes (F5, F7, F8),
+but still struggles in landscapes that are either highly narrow-peaked
+or poorly approximated by the current Gaussian Process configuration.
+
+The optimisation process is now clearly exploit-driven in strong regions.
+Future iterations will likely require:
+- Continued aggressive refinement for F5 and F7
+- A revised recovery strategy for F2
+- More cautious handling of F6 to avoid premature local convergence
