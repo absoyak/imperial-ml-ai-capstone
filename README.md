@@ -141,6 +141,16 @@ Strategic divergence by function:
 - Introduced spread-based sampling for F1 after repeated near-zero outputs
 - Applied uncertainty-driven exploration for F4 which resulted in a major improvement
 
+### Week 7
+Recovery and exploitation consolidation.
+
+- Replaced spread-based sampling for F1 with EI-driven local search
+- Maintained single-centre constraint for F2 with tight local sampling
+- Reduced UCB kappa for F4 to consolidate positive region found in Week 6
+- Reset F6 to variance-driven exploration after UCB failed to hold gains
+- Reduced UCB kappa for F8 to limit over-exploration
+- F5 continues strong upward trend with GP predicting above 3900
+
 Notable outcomes:
 
 - **Function 5 achieved the strongest improvement so far**, expanding from
