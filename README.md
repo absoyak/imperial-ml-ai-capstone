@@ -20,7 +20,8 @@ Weekly progress is documented in:
 - reports/week_04.md
 - reports/week_05.md
 - reports/week_06.md
-- reports/week_07.md (soon)
+- reports/week_07.md
+- reports/week_08.md (soon)
 
 ---
 
@@ -150,6 +151,19 @@ Recovery and exploitation consolidation.
 - Reset F6 to variance-driven exploration after UCB failed to hold gains
 - Reduced UCB kappa for F8 to limit over-exploration
 - F5 continues strong upward trend with GP predicting above 3900
+
+### Week 8
+Targeted hyperparameter tuning and controlled recovery.
+
+- Replaced pure variance exploration for F1 with UCB to balance uncertainty and predicted value
+- Relaxed the overly tight local search for F2 by reducing local fraction and increasing exploration pressure
+- Expanded local sampling range for F3 to avoid premature convergence around weak signals
+- Reduced UCB exploration pressure for F4 to refine the positive region discovered in Week 6
+- Continued aggressive EI-based boundary refinement for F5 after strong peak expansion
+- Switched F6 from variance exploration to UCB recovery to avoid random low-value regions
+- Maintained EI-driven local refinement for F7 after steady improvements
+- Slightly reduced local sampling pressure for F8 to prevent over-concentration in high dimensions
+- F5 continues boundary expansion near the upper limits of the search space, suggesting the optimum lies along a ridge close to x ≈ 1.
 
 Notable outcomes:
 
