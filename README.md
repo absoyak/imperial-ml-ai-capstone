@@ -21,7 +21,8 @@ Weekly progress is documented in:
 - reports/week_05.md
 - reports/week_06.md
 - reports/week_07.md
-- reports/week_08.md (soon)
+- reports/week_08.md
+- reports/week_09.md (soon)
 
 ---
 
@@ -164,6 +165,16 @@ Targeted hyperparameter tuning and controlled recovery.
 - Maintained EI-driven local refinement for F7 after steady improvements
 - Slightly reduced local sampling pressure for F8 to prevent over-concentration in high dimensions
 - F5 continues boundary expansion near the upper limits of the search space, suggesting the optimum lies along a ridge close to x ≈ 1.
+
+### Week 9
+Full exploitation phase — 5 weeks remaining.
+
+- Increased candidate count to 150k for finer search resolution
+- Switched F3 and F4 to tighter local sampling around confirmed best regions
+- F4 moved from EI to UCB with low kappa to manage high surrogate uncertainty
+- F7 and F8 fully switched to EI for stable local refinement
+- F2 kappa reduced further to prevent excursions from high-value region
+- F5 continues exploitation near upper search boundary
 
 Notable outcomes:
 
