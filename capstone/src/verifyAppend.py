@@ -2,6 +2,7 @@ import numpy as np
 from pathlib import Path
 from typing import List, Tuple
 
+
 def extractTopLevelBracketBlocks(text: str) -> list[str]:
     blocks: list[str] = []
     depth: int = 0
@@ -46,7 +47,6 @@ def loadWeeklyTxtFiles(scriptFolder: Path) -> Tuple[List[np.ndarray], List[float
     if len(inputBlocks) == 0 or len(outputBlocks) == 0:
         raise ValueError("No valid list blocks found")
 
-    # Son blok = son hafta
     weeklyInputsRaw = eval(inputBlocks[-1], safeGlobals, {})
     weeklyOutputsRaw = eval(outputBlocks[-1], safeGlobals, {})
 
@@ -65,9 +65,30 @@ def loadWeeklyTxtFiles(scriptFolder: Path) -> Tuple[List[np.ndarray], List[float
     return weeklyInputs, weeklyOutputs
 
 
-
 def fmtVector(v: np.ndarray) -> str:
     return "[" + ", ".join(f"{float(x):.6f}" for x in v.tolist()) + "]"
+
+
+def removeDuplicateRows(xData: np.ndarray, yData: np.ndarray) -> Tuple[np.ndarray, np.ndarray, int]:
+    """Remove exact duplicate rows (by input vector). Keeps first occurrence."""
+    seenIndices: list[int] = []
+    removedCount: int = 0
+
+    for i in range(len(xData)):
+        isDuplicate: bool = False
+        for j in seenIndices:
+            if np.all(np.abs(xData[i] - xData[j]) < 1e-12):
+                isDuplicate = True
+                break
+        if isDuplicate:
+            removedCount += 1
+        else:
+            seenIndices.append(i)
+
+    xClean: np.ndarray = xData[seenIndices]
+    yClean: np.ndarray = yData[seenIndices]
+
+    return xClean, yClean, removedCount
 
 
 def main() -> None:
@@ -82,6 +103,30 @@ def main() -> None:
         print(f"Function {i}: X={fmtVector(weeklyInputs[i-1])} | Y={weeklyOutputs[i-1]:.12g}")
     print()
 
+    # Step 1: remove duplicates from all functions
+    print("=== Duplicate Removal ===")
+    for functionIndex in range(1, 9):
+        functionFolder: Path = dataRoot / f"function_{functionIndex}"
+        inputsPath: Path = functionFolder / "initial_inputs.npy"
+        outputsPath: Path = functionFolder / "initial_outputs.npy"
+
+        xData: np.ndarray = np.load(inputsPath).astype(np.float64)
+        yData: np.ndarray = np.load(outputsPath).astype(np.float64).reshape(-1)
+
+        xClean, yClean, removedCount = removeDuplicateRows(xData, yData)
+
+        if removedCount > 0:
+            np.save(inputsPath, xClean)
+            np.save(outputsPath, yClean)
+            print(f"  Function {functionIndex}: removed {removedCount} duplicate(s). "
+                  f"{len(xData)} → {len(xClean)} rows")
+        else:
+            print(f"  Function {functionIndex}: no duplicates found ({len(xData)} rows)")
+
+    print()
+
+    # Step 2: verify last row matches expected
+    print("=== Verification ===")
     allOk: bool = True
 
     for functionIndex in range(1, 9):
@@ -103,7 +148,7 @@ def main() -> None:
         sameY: bool = abs(lastY - expectedY) <= 1e-12
 
         print(f"Function {functionIndex}")
-        print(f"  Dataset shapes: X={xData.shape}, Y={yData.shape}")
+        print(f"  Dataset shapes : X={xData.shape}, Y={yData.shape}")
         print(f"  Last row in .npy : X={fmtVector(lastX)} | Y={lastY:.12g}")
         print(f"  Expected (txt)   : X={fmtVector(expectedX)} | Y={expectedY:.12g}")
         print(f"  Match            : X={'OK' if sameX else 'FAIL'} | Y={'OK' if sameY else 'FAIL'}\n")

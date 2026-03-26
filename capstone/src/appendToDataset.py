@@ -76,8 +76,15 @@ def appendToDataset(functionFolder: Path, newInput: Sequence[float], newOutput: 
     if xData.shape[1] != newX.shape[1]:
         raise ValueError(f"Input dimension mismatch in {functionFolder.name}: {xData.shape[1]} vs {newX.shape[1]}")
 
+    # Duplicate check
+    isDuplicate: bool = np.any(np.all(np.abs(xData - newX) < 1e-12, axis=1))
+    if isDuplicate:
+        print(f"  SKIP {functionFolder.name}: input already exists in dataset")
+        return
+
     np.save(inputsPath, np.vstack((xData, newX)))
     np.save(outputsPath, np.concatenate((yData, newY)))
+    print(f"  OK   {functionFolder.name}: appended")
 
 
 def main() -> None:
