@@ -89,8 +89,8 @@ def pickConfigForFunction(functionIndex: int) -> Dict[str, float | str]:
     configMap: Dict[int, Dict[str, float | str]] = {
         1: {"acq": "spread",  "kappa": 0.0,  "xi": 0.0,   "localFrac": 0.00, "localStd": 0.000},
         2: {"acq": "ucb",     "kappa": 0.30, "xi": 1e-6,  "localFrac": 1.00, "localStd": 0.008},
-        3: {"acq": "ei",  "kappa": 0.0, "xi": 1e-6, "localFrac": 0.98, "localStd": 0.015},
-        4: {"acq": "ucb", "kappa": 0.8, "xi": 0.0,  "localFrac": 0.92, "localStd": 0.025},
+        3: {"acq": "ei",      "kappa": 0.0,  "xi": 1e-6,  "localFrac": 0.98, "localStd": 0.015},
+        4: {"acq": "ucb",     "kappa": 0.8,  "xi": 0.0,   "localFrac": 0.92, "localStd": 0.025},
         5: {"acq": "ei",      "kappa": 0.0,  "xi": 1e-6,  "localFrac": 0.95, "localStd": 0.020},
         6: {"acq": "ei",      "kappa": 0.0,  "xi": 1e-3,  "localFrac": 0.75, "localStd": 0.050},
         7: {"acq": "ei",      "kappa": 0.0,  "xi": 1e-6,  "localFrac": 0.90, "localStd": 0.025},
