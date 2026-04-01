@@ -22,7 +22,8 @@ Weekly progress is documented in:
 - reports/week_06.md
 - reports/week_07.md
 - reports/week_08.md
-- reports/week_09.md (soon)
+- reports/week_09.md
+- reports/week_10.md (soon)
 
 ---
 
@@ -175,6 +176,15 @@ Full exploitation phase — 5 weeks remaining.
 - F7 and F8 fully switched to EI for stable local refinement
 - F2 kappa reduced further to prevent excursions from high-value region
 - F5 continues exploitation near upper search boundary
+
+### Week 10
+Final exploitation phase — 4 weeks remaining.
+
+- Switched F1 from spread to EI, targeting the only observed non-zero region
+- Switched F2 from UCB to EI with localStd=0.006 for precise boundary targeting
+- Introduced F5-specific candidate generation — x1 free, x2/x3/x4 pinned to 0.999999 boundary
+- Tightened localStd for F3, F7 and F8 to narrow exploitation around confirmed peaks
+- Switched F4 from UCB to EI with topK=1 constraint
 
 Notable outcomes:
 
