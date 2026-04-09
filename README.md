@@ -16,22 +16,22 @@ Weekly progress is documented in:
 
 Weekly progress is documented in:
 
-- [Week 01](reports/week_01.md)
-- [Week 02](reports/week_02.md)
-- [Week 03](reports/week_03.md)
-- [Week 04](reports/week_04.md)
-- [Week 05](reports/week_05.md)
-- [Week 06](reports/week_06.md)
-- [Week 07](reports/week_07.md)
-- [Week 08](reports/week_08.md)
-- [Week 09](reports/week_09.md)
-- [Week 10](reports/week_10.md)
-- [Week 11](reports/week_11.md) (soon)
+- [Week 01](capstone/reports/week_01.md)
+- [Week 02](capstone/reports/week_02.md)
+- [Week 03](capstone/reports/week_03.md)
+- [Week 04](capstone/reports/week_04.md)
+- [Week 05](capstone/reports/week_05.md)
+- [Week 06](capstone/reports/week_06.md)
+- [Week 07](capstone/reports/week_07.md)
+- [Week 08](capstone/reports/week_08.md)
+- [Week 09](capstone/reports/week_09.md)
+- [Week 10](capstone/reports/week_10.md)
+- [Week 11](capstone/reports/week_11.md) (soon)
 
 ---
 
-- [Dataset Datasheet](docs/datasheet.md)
-- [Model Card](docs/model_card.md)
+- [Dataset Datasheet](capstone/docs/datasheet.md)
+- [Model Card](capstone/docs/model_card.md)
 
 ## Problem Setting
 
