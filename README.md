@@ -14,18 +14,24 @@ The setup mirrors real-world ML deployment scenarios:
 
 Weekly progress is documented in:
 
-- reports/week_01.md
-- reports/week_02.md
-- reports/week_03.md
-- reports/week_04.md
-- reports/week_05.md
-- reports/week_06.md
-- reports/week_07.md
-- reports/week_08.md
-- reports/week_09.md
-- reports/week_10.md (soon)
+Weekly progress is documented in:
+
+- [Week 01](reports/week_01.md)
+- [Week 02](reports/week_02.md)
+- [Week 03](reports/week_03.md)
+- [Week 04](reports/week_04.md)
+- [Week 05](reports/week_05.md)
+- [Week 06](reports/week_06.md)
+- [Week 07](reports/week_07.md)
+- [Week 08](reports/week_08.md)
+- [Week 09](reports/week_09.md)
+- [Week 10](reports/week_10.md)
+- [Week 11](reports/week_11.md) (soon)
 
 ---
+
+- [Dataset Datasheet](docs/datasheet.md)
+- [Model Card](docs/model_card.md)
 
 ## Problem Setting
 
@@ -185,6 +191,15 @@ Final exploitation phase — 4 weeks remaining.
 - Introduced F5-specific candidate generation — x1 free, x2/x3/x4 pinned to 0.999999 boundary
 - Tightened localStd for F3, F7 and F8 to narrow exploitation around confirmed peaks
 - Switched F4 from UCB to EI with topK=1 constraint
+
+### Week 11
+Maximum exploitation — 3 weeks remaining.
+
+- Tightened localStd further for F2 (0.005), F3 (0.010), F7 (0.015) and F8 (0.018)
+- Applied topK=1 constraint to F1, F2, F3, F4 and F8
+- F1 EI targeting the only observed non-zero region
+- F4 and F6 continued with tight local refinement despite high surrogate uncertainty
+- F5 boundary-pinned candidate generation maintained
 
 Notable outcomes:
 
