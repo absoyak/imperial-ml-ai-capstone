@@ -26,7 +26,7 @@ Weekly progress is documented in:
 - [Week 08](capstone/reports/week_08.md)
 - [Week 09](capstone/reports/week_09.md)
 - [Week 10](capstone/reports/week_10.md)
-- [Week 11](capstone/reports/week_11.md) (soon)
+- [Week 11](capstone/reports/week_11.md)
 
 ---
 
@@ -200,6 +200,17 @@ Maximum exploitation — 3 weeks remaining.
 - F1 EI targeting the only observed non-zero region
 - F4 and F6 continued with tight local refinement despite high surrogate uncertainty
 - F5 boundary-pinned candidate generation maintained
+
+### Week 12
+Final round — maximum exploitation with structural improvements.
+
+- Increased candidate count to 200k for finest search resolution
+- Added per-function GP model parameters via getModelParams() — separate lengthScale and noiseLevel per function
+- Added filterTopK() to fit GP on recent high-value observations only, reducing noise from early exploratory queries
+- F5 fixed to 0.999999-0.999999-0.999999-0.999999 based on boundary ridge evidence
+- F2 and F3 single-centre EI with very tight localStd (0.005, 0.004)
+- F8 switched to UCB with kappa=0.0 and wider localStd after EI failed to calibrate in 8D
+- buildCandidatesF1 introduced — dual-centre sampling around best and most informative observed point
 
 Notable outcomes:
 
