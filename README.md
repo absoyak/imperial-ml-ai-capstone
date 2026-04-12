@@ -14,8 +14,6 @@ The setup mirrors real-world ML deployment scenarios:
 
 Weekly progress is documented in:
 
-Weekly progress is documented in:
-
 - [Week 01](capstone/reports/week_01.md)
 - [Week 02](capstone/reports/week_02.md)
 - [Week 03](capstone/reports/week_03.md)
@@ -27,11 +25,26 @@ Weekly progress is documented in:
 - [Week 09](capstone/reports/week_09.md)
 - [Week 10](capstone/reports/week_10.md)
 - [Week 11](capstone/reports/week_11.md)
+- [Week 12](capstone/reports/week_12.md)
 
 ---
 
 - [Dataset Datasheet](capstone/docs/datasheet.md)
 - [Model Card](capstone/docs/model_card.md)
+
+---
+
+## Results
+
+### Per-Function Progress
+
+![Per-function optimisation progress](capstone/data/bbo_progress_per_function.png)
+
+### Normalised Cumulative Best (All Functions)
+
+![Normalised cumulative best across all functions](capstone/data/bbo_progress_normalised.png)
+
+---
 
 ## Problem Setting
 
@@ -51,7 +64,7 @@ Constraints include:
 - Unknown function form
 - Strongly varying output magnitudes
 - Severe sparsity in higher dimensions
-- Limited query budget (15 total observations)
+- One query per function per week (12 weeks total)
 
 ---
 
@@ -117,14 +130,14 @@ Exploration–exploitation balance is adjusted per landscape:
 
 ## Evolution of Strategy
 
-### Week 1–2  
-Baseline GP with mixed acquisition functions.  
+### Week 1–2
+Baseline GP with mixed acquisition functions.
 Exploration-heavy to understand global structure.
 
-### Week 3  
+### Week 3
 Hybrid strategy. Function-specific adjustments introduced.
 
-### Week 4  
+### Week 4
 Stabilisation phase.
 
 - Target normalisation activated
@@ -132,7 +145,7 @@ Stabilisation phase.
 - Controlled UCB recovery for unstable functions
 - Increased local sampling density
 
-### Week 5  
+### Week 5
 Refinement and code quality improvements.
 
 - Fixed surrogate miscalibration in Function 2
@@ -142,7 +155,7 @@ Refinement and code quality improvements.
 
 Function 5 and Function 7 showed consistent improvement.
 
-### Week 6  
+### Week 6
 Strategic divergence by function:
 
 - Preserved aggressive exploitation for F5 and F7 using Expected Improvement
@@ -171,10 +184,9 @@ Targeted hyperparameter tuning and controlled recovery.
 - Switched F6 from variance exploration to UCB recovery to avoid random low-value regions
 - Maintained EI-driven local refinement for F7 after steady improvements
 - Slightly reduced local sampling pressure for F8 to prevent over-concentration in high dimensions
-- F5 continues boundary expansion near the upper limits of the search space, suggesting the optimum lies along a ridge close to x ≈ 1.
 
 ### Week 9
-Full exploitation phase — 5 weeks remaining.
+Full exploitation phase — 4 weeks remaining.
 
 - Increased candidate count to 150k for finer search resolution
 - Switched F3 and F4 to tighter local sampling around confirmed best regions
@@ -184,7 +196,7 @@ Full exploitation phase — 5 weeks remaining.
 - F5 continues exploitation near upper search boundary
 
 ### Week 10
-Final exploitation phase — 4 weeks remaining.
+Final exploitation phase — 3 weeks remaining.
 
 - Switched F1 from spread to EI, targeting the only observed non-zero region
 - Switched F2 from UCB to EI with localStd=0.006 for precise boundary targeting
@@ -193,7 +205,7 @@ Final exploitation phase — 4 weeks remaining.
 - Switched F4 from UCB to EI with topK=1 constraint
 
 ### Week 11
-Maximum exploitation — 3 weeks remaining.
+Maximum exploitation — 2 weeks remaining.
 
 - Tightened localStd further for F2 (0.005), F3 (0.010), F7 (0.015) and F8 (0.018)
 - Applied topK=1 constraint to F1, F2, F3, F4 and F8
@@ -212,16 +224,18 @@ Final round — maximum exploitation with structural improvements.
 - F8 switched to UCB with kappa=0.0 and wider localStd after EI failed to calibrate in 8D
 - buildCandidatesF1 introduced — dual-centre sampling around best and most informative observed point
 
-Notable outcomes:
+**Final results:**
 
-- **Function 5 achieved the strongest improvement so far**, expanding from
-  2603.66 to **3555.59**, confirming a strong peak near the search boundary.
-- **Function 4 recovered dramatically**, moving from approximately −2.08
-  to **0.41**, suggesting successful escape from a poor region.
-- **Function 7 continued steady refinement** (2.69 → 2.73).
-- **Function 2 partially recovered** after switching back to uncertainty-aware exploration.
-
-The optimisation is now clearly landscape-aware rather than globally configured.
+| Function | Week 1 Best | Final Best | Change |
+|----------|-------------|------------|--------|
+| F1 | ~0 | ~0 | — |
+| F2 | 0.641 | 0.663 | +3.4% |
+| F3 | -0.483 | -0.009 | Major improvement |
+| F4 | -31.18 | +0.482 | Major improvement |
+| F5 | 1163.7 | 8662.4 | +644% |
+| F6 | -2.75 | -0.413 | Major improvement |
+| F7 | 2.27 | 3.080 | +35.7% |
+| F8 | 9.31 | 9.675 | +3.9% |
 
 ---
 
@@ -235,19 +249,6 @@ This project explicitly balances:
 - Global coverage vs trust-region refinement
 
 High-dimensional functions (6D–8D) required tighter local refinement and controlled uncertainty handling.
-
----
-
-## Relation to CNN Concepts
-
-Concepts from neural network training influenced optimisation decisions:
-
-- Overfitting parallels excessive exploitation
-- Regularisation parallels GP noise tuning
-- Model capacity parallels kernel length scale
-- Progressive feature extraction parallels progressive landscape refinement
-
-The optimisation process increasingly mirrors structured model refinement seen in deep learning systems.
 
 ---
 
@@ -273,9 +274,9 @@ The strategy evolves through evidence-driven iteration.
 The optimisation process transitioned from generic Bayesian optimisation
 to adaptive, function-aware, uncertainty-calibrated search.
 
-Performance gains in F5 and F7 validate the exploit-refine strategy.
-Instabilities in F2 illustrate the importance of uncertainty-aware recovery.
+Performance gains in F5 (+644%) and F7 validate the exploit-refine strategy.
+Instabilities in F2 and F4 illustrate the difficulty of modelling irregular landscapes with limited data.
 
-The full project implementation and weekly reports are available on GitHub:
+The full project implementation, weekly reports, and all data are available on GitHub:
 
 https://github.com/absoyak/imperial-ml-ai-capstone
