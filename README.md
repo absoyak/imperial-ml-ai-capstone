@@ -224,6 +224,20 @@ Final round — maximum exploitation with structural improvements.
 - F8 switched to UCB with kappa=0.0 and wider localStd after EI failed to calibrate in 8D
 - buildCandidatesF1 introduced — dual-centre sampling around best and most informative observed point
 
+### Week 13
+Final submission — last iteration, full exploitation lock-in.
+
+- Maintained high candidate count (200k) for maximum resolution in final search
+- Applied strict EI-based local exploitation across all stable functions (F2, F3, F4, F7)
+- Further reduced localStd for F2, F3 and F7 to ensure ultra-tight refinement around confirmed peaks
+- Introduced F1-specific dual-centre + mirror sampling to attempt final recovery of flat landscape
+- Stabilised F4 by reverting from high-uncertainty regions back to previously successful cluster
+- Maintained UCB with moderate kappa for F6 as the only remaining recoverable function
+- Preserved F8 near-peak region with low-exploration UCB configuration
+- Locked F5 to boundary optimum (all dimensions = 0.999999), based on consistent ridge behaviour across multiple weeks
+
+The final iteration prioritised reliability over exploration, ensuring all queries remained within validated high-performing regions while allowing minimal controlled recovery where justified.
+
 **Final results:**
 
 | Function | Week 1 Best | Final Best | Change |
