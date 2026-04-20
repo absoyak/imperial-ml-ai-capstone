@@ -26,6 +26,7 @@ Weekly progress is documented in:
 - [Week 10](capstone/reports/week_10.md)
 - [Week 11](capstone/reports/week_11.md)
 - [Week 12](capstone/reports/week_12.md)
+- [Week 13](capstone/reports/week_13.md)
 
 ---
 
@@ -236,20 +237,36 @@ Final submission — last iteration, full exploitation lock-in.
 - Preserved F8 near-peak region with low-exploration UCB configuration
 - Locked F5 to boundary optimum (all dimensions = 0.999999), based on consistent ridge behaviour across multiple weeks
 
+### Final
+Campaign conclusion — final round with targeted refinements.
+
+- Reduced filterTopK limits for F2 and F6 to 10 observations for tighter local GP calibration
+- Added filterTopK(10) for F7 — excluded early exploratory queries that were misleading the surrogate
+- F4 switched from UCB to EI with single-centre constraint around the Week 8 peak
+- buildCandidatesF1 extended with a mirror centre at (0.580, 0.536) as a speculative final attempt
+- F5 continued fixed boundary submission, locking in the Week 12 record
+- F7 achieved a new campaign best of 3.181, confirming the value of late-stage filterTopK adjustments
+
 The final iteration prioritised reliability over exploration, ensuring all queries remained within validated high-performing regions while allowing minimal controlled recovery where justified.
 
-**Final results:**
+**Final campaign results:**
 
-| Function | Week 1 Best | Final Best | Change |
-|----------|-------------|------------|--------|
-| F1 | ~0 | ~0 | — |
-| F2 | 0.641 | 0.663 | +3.4% |
-| F3 | -0.483 | -0.009 | Major improvement |
-| F4 | -31.18 | +0.482 | Major improvement |
-| F5 | 1163.7 | 8662.4 | +644% |
-| F6 | -2.75 | -0.413 | Major improvement |
-| F7 | 2.27 | 3.080 | +35.7% |
-| F8 | 9.31 | 9.675 | +3.9% |
+| Function | Dim | Week 1 Best | Final Best | Change |
+|----------|-----|-------------|------------|--------|
+| F1 | 2 | ~0 | ~0 | No improvement |
+| F2 | 2 | 0.641 | 0.663 | +3.4% |
+| F3 | 3 | -0.483 | -0.009 | Major improvement |
+| F4 | 4 | -31.18 | +0.482 | Major improvement |
+| F5 | 4 | 1163.7 | 8662.4 | +644% |
+| F6 | 5 | -2.75 | -0.413 | Major improvement |
+| F7 | 6 | 2.27 | 3.181 | +40.1% |
+| F8 | 8 | 9.31 | 9.675 | +3.9% |
+
+Seven out of eight functions showed meaningful improvement over the 13-week
+campaign. The strongest result was Function 5 with a 644% gain from the Week 1
+baseline, confirming the value of the boundary exploitation strategy. Function 1
+remained the single unresolved case — 13 rounds of varied acquisition strategies
+produced no identifiable high-value region.
 
 ---
 
@@ -280,17 +297,24 @@ Potential next steps include:
 
 ## Reflection
 
-This project demonstrates structured decision-making under uncertainty rather than brute-force search.
+This project demonstrates structured decision-making under uncertainty rather
+than brute-force search. The code remained intentionally simple; the strategy
+evolved through evidence-driven iteration.
 
-The code remains intentionally simple.
-The strategy evolves through evidence-driven iteration.
+The optimisation process transitioned from generic Bayesian optimisation to
+adaptive, function-aware, uncertainty-calibrated search. Performance gains in
+F5 (+644%) and F7 (+40%) validate the exploit-refine strategy, while the
+persistent difficulty of F1 and F4 illustrates the limits of surrogate-based
+optimisation under extreme query constraints.
 
-The optimisation process transitioned from generic Bayesian optimisation
-to adaptive, function-aware, uncertainty-calibrated search.
+The campaign showed that no single acquisition rule works across all functions.
+Each landscape required its own configuration, informed by accumulated
+observations rather than applied uniformly. Late-campaign strategic adjustments
+— including the Week 12 fixed submission for F5 and the Week 13 filterTopK
+expansion for F7 — delivered meaningful improvements even in the final rounds,
+demonstrating that careful analysis remains valuable throughout the campaign.
 
-Performance gains in F5 (+644%) and F7 validate the exploit-refine strategy.
-Instabilities in F2 and F4 illustrate the difficulty of modelling irregular landscapes with limited data.
-
-The full project implementation, weekly reports, and all data are available on GitHub:
+The full project implementation, weekly reports, datasheet, model card, and all
+submission data are available on GitHub:
 
 https://github.com/absoyak/imperial-ml-ai-capstone
