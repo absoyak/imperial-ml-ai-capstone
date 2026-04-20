@@ -30,19 +30,20 @@ surrogate model implemented from scratch in NumPy.
 - **Candidate generation:** 150,000–200,000 candidates per query, mixing local
   candidates (Gaussian noise around top-k observed points) and global candidates
   (uniform random). Local fraction and standard deviation are tuned per function.
-  Function 5 uses boundary-pinned candidates with x2/x3/x4 fixed near 0.999999.
+  Function 5 uses fixed boundary submission at (0.999999, 0.999999, 0.999999, 0.999999)
+  based on accumulated ridge evidence.
 - **filterTopK:** From Week 12, the GP is fitted only on the top-k most recent
-  high-value observations for selected functions, reducing noise from early
-  exploratory queries.
+  high-value observations for selected functions (F2, F6 in Week 12; extended to
+  F7 in Week 13), reducing noise from early exploratory queries.
 
 ---
 
 ## Performance
 
 Performance is measured as the cumulative best output observed per function
-across all 12 weeks of sequential queries. Higher is better for all functions.
+across all 13 weeks of sequential queries. Higher is better for all functions.
 
-| Function | Dim | Week 1 Best | Final Best (W12) | Improvement |
+| Function | Dim | Week 1 Best | Final Best (W13) | Improvement |
 |----------|-----|-------------|------------------|-------------|
 | F1 | 2 | ~0 | ~0 | None |
 | F2 | 2 | 0.641 | 0.663 | +3.4% |
@@ -50,7 +51,7 @@ across all 12 weeks of sequential queries. Higher is better for all functions.
 | F4 | 4 | -31.18 | +0.482 | Major |
 | F5 | 4 | 1163.7 | 8662.4 | +644% |
 | F6 | 5 | -2.75 | -0.413 | Major |
-| F7 | 6 | 2.27 | 3.080 | +35.7% |
+| F7 | 6 | 2.27 | 3.181 | +40.1% |
 | F8 | 8 | 9.31 | 9.675 | +3.9% |
 
 **Functions with consistent improvement:** F3, F5, F7, F8
@@ -58,15 +59,17 @@ across all 12 weeks of sequential queries. Higher is better for all functions.
 **Functions that resisted improvement:** F1, F6
 
 The most significant gains occurred in F5 (+644%), where the optimum was
-eventually located at the upper boundary of the search space (all coordinates
-near 0.999999). F3 and F4 also showed major improvements from strongly
-negative starting points.
+eventually located at the corner of the search space (all coordinates near
+0.999999). F3, F4 and F6 showed major improvements from strongly negative
+starting points. F7 delivered steady gains throughout the campaign, reaching
+a new best of 3.181 in the final round after the introduction of filterTopK
+for this function.
 
 ---
 
 ## Limitations
 
-- **Data scarcity in high dimensions:** With approximately 22 observations per
+- **Data scarcity in high dimensions:** With approximately 23 observations per
   function, the GP is severely under-informed in 6D and 8D spaces. The surrogate
   cannot reliably model the full landscape and may produce overconfident predictions
   far from observed points.
@@ -82,6 +85,11 @@ negative starting points.
 - **Single query per week per function:** The one-query-per-week constraint severely
   limits the rate of learning, particularly in higher-dimensional functions where
   the surrogate requires more observations to become reliable.
+- **Unmodellable landscapes:** Function 4 consistently produced high surrogate
+  uncertainty (sigma > 3.0) across all 13 weeks, indicating that the RBF smoothness
+  assumption does not hold for this function. Function 1 produced near-zero outputs
+  in every round, suggesting either an extremely narrow peak that was never sampled
+  or a largely flat landscape in the accessible region.
 
 ---
 
@@ -107,6 +115,8 @@ with poorly understood landscapes (F1, F6), this trade-off was particularly cost
 **filterTopK:** Fitting the GP on a subset of high-value observations (rather
 than all historical data) improved surrogate calibration in the local region
 but discarded potentially useful global structure learned from early queries.
+In Week 13, extending filterTopK to F7 produced the campaign's final record
+for that function, validating the approach for high-dimensional smooth landscapes.
 
 **Ethical Considerations:**
 

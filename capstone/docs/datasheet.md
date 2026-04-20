@@ -5,7 +5,7 @@
 This dataset was created to support a black-box optimisation (BBO) challenge
 as part of the Imperial College London Machine Learning and AI Professional
 Certificate programme. The dataset records all query inputs and corresponding
-function evaluation outputs collected over 12 weeks of sequential optimisation
+function evaluation outputs collected over 13 weeks of sequential optimisation
 across eight unknown functions.
 
 The dataset was created by Burak Absoy, on behalf of himself as a learner on
@@ -21,20 +21,20 @@ Each instance in the dataset represents a single query: an input vector
 submitted to one of eight unknown black-box functions, paired with the
 scalar output returned by that function.
 
-**Function dimensionality and instance counts (as of Week 12):**
+**Function dimensionality and instance counts (as of Week 13):**
 
 | Function | Dimensions | Input Range | Approx. Instances |
 |----------|------------|-------------|-------------------|
-| F1 | 2 | [0, 1) | ~22 |
-| F2 | 2 | [0, 1) | ~22 |
-| F3 | 3 | [0, 1) | ~22 |
-| F4 | 4 | [0, 1) | ~22 |
-| F5 | 4 | [0, 1) | ~22 |
-| F6 | 5 | [0, 1) | ~22 |
-| F7 | 6 | [0, 1) | ~22 |
-| F8 | 8 | [0, 1) | ~22 |
+| F1 | 2 | [0, 1) | ~23 |
+| F2 | 2 | [0, 1) | ~23 |
+| F3 | 3 | [0, 1) | ~23 |
+| F4 | 4 | [0, 1) | ~23 |
+| F5 | 4 | [0, 1) | ~23 |
+| F6 | 5 | [0, 1) | ~23 |
+| F7 | 6 | [0, 1) | ~23 |
+| F8 | 8 | [0, 1) | ~23 |
 
-Total: approximately 176 input-output pairs across all functions.
+Total: approximately 184 input-output pairs across all functions.
 Input values are specified to six decimal places.
 Output values are real-valued scalars with no fixed range.
 
@@ -53,7 +53,7 @@ are synthetic and provided solely for academic purposes.
 - F4: range approximately [-34.75, 0.48]
 - F5: range approximately [1163, 8662]
 - F6: range approximately [-3.06, -0.41]
-- F7: range approximately [1.80, 3.08]
+- F7: range approximately [1.80, 3.18]
 - F8: range approximately [9.24, 9.68]
 
 ---
@@ -72,12 +72,12 @@ unique evaluation of the unknown function at a chosen input point. The
 sampling strategy evolved across weeks:
 - Weeks 1–3: exploration-focused (UCB, Variance, PI acquisition functions)
 - Weeks 4–6: function-specific hybrid strategies introduced
-- Weeks 7–12: tight local exploitation using Expected Improvement
+- Weeks 7–13: tight local exploitation using Expected Improvement
 
 All inputs were constrained to [0, 0.999999] to satisfy portal formatting
 requirements. Values are specified to six decimal places.
 
-The dataset was collected over a 12-week period from February to April 2026.
+The dataset was collected over a 13-week period from February to April 2026.
 
 ---
 
@@ -90,10 +90,13 @@ The dataset was collected over a 12-week period from February to April 2026.
 - Duplicate row detection and removal implemented after an accidental
   double-append was discovered in Week 8. The `verifyAppend.py` script
   now automatically removes duplicate rows before verification.
+- `filterTopK` introduced in Week 12 and extended in Week 13 — a derived
+  subset that retains only the top-k highest-value observations for GP fitting
+  on selected functions (F2, F6, F7). The original full dataset is preserved.
 
 **Raw data preservation:** The original weekly submission files
 (`inputs.txt` and `outputs.txt`) are preserved in their respective week
-folders (`data/week_01/` through `data/week_12/`), providing a complete
+folders (`data/week_01/` through `data/week_13/`), providing a complete
 audit trail of all submissions and outputs. The processed `.npy` files
 are derived from these raw files.
 
@@ -145,5 +148,5 @@ by the learner.
 
 The dataset is maintained by Burak Absoy as part of the Imperial College
 London ML/AI Professional Certificate capstone project. Updates were made
-weekly throughout the 12-week campaign. No further updates are expected
+weekly throughout the 13-week campaign. No further updates are expected
 after programme completion.
