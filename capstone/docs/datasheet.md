@@ -150,3 +150,17 @@ The dataset is maintained by Burak Absoy as part of the Imperial College
 London ML/AI Professional Certificate capstone project. Updates were made
 weekly throughout the 13-week campaign. No further updates are expected
 after programme completion.
+
+---
+
+## Function-level observations
+
+While this datasheet focuses on the full dataset, several function-specific patterns emerged:
+
+- F5 shows a strong boundary-driven optimum, with all variables converging to 0.999999
+- F7 exhibits a stable local region that supports consistent refinement
+- F2 has a narrow peak that penalises small deviations
+- F1 shows near-zero output across all samples, suggesting either a flat landscape or an extremely narrow optimum
+- Higher-dimensional functions (F6, F8) suffer from sparse coverage and unreliable surrogate modelling
+
+These observations directly influenced the optimisation strategy in later weeks.

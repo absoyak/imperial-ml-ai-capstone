@@ -322,6 +322,23 @@ The project also showed the limits of Gaussian Processes. Some functions were le
 
 The main lesson is that optimisation depends on recognising structure. A strong strategy is not the most complex one, but the one that adapts when the model is no longer reliable.
 
+---
+
+## Non-technical Summary
+
+This project explores how to optimise unknown systems using very limited information. Instead of knowing how a function works, we can only test it by trying different inputs and observing the results.
+
+Over 13 weeks, I used a machine learning approach called Bayesian optimisation to gradually improve performance. The system learns from past results and decides where to try next, balancing exploration of new areas and refinement of known good regions.
+
+Some functions showed clear patterns and were successfully optimised, while others remained unpredictable. This reflects real-world scenarios where not all problems are equally learnable.
+
+---
+
+## Reproducibility
+
+To reproduce results, run the weekly scripts in the `capstone/src` folder. 
+Note that results may slightly vary due to stochastic candidate generation 
+unless a random seed is fixed.
 
 The full project implementation, weekly reports, datasheet, model card, and all
 submission data are available on GitHub:

@@ -126,3 +126,14 @@ no real-world impact. All query decisions are logged in weekly markdown reports
 in the `reports/` directory, making the decision-making process fully auditable.
 The full codebase and dataset are publicly available at
 `https://github.com/absoyak/imperial-ml-ai-capstone`.
+
+---
+
+## Summary
+
+This model is designed to optimise unknown systems using very limited data. 
+It learns from past observations and suggests the next best input to try, 
+balancing between exploring new regions and refining known good areas.
+
+The approach works well for smooth and structured problems, but struggles 
+when the landscape is highly irregular or when very little data is available.
