@@ -297,22 +297,31 @@ Potential next steps include:
 
 ## Reflection
 
-This project demonstrates structured decision-making under uncertainty rather
-than brute-force search. The code remained intentionally simple; the strategy
-evolved through evidence-driven iteration.
+This project demonstrates decision-making under uncertainty rather than brute-force optimisation. The strategy evolved from a generic Bayesian optimisation setup into a function-aware process driven by observed behaviour.
 
-The optimisation process transitioned from generic Bayesian optimisation to
-adaptive, function-aware, uncertainty-calibrated search. Performance gains in
-F5 (+644%) and F7 (+40%) validate the exploit-refine strategy, while the
-persistent difficulty of F1 and F4 illustrates the limits of surrogate-based
-optimisation under extreme query constraints.
+Strong improvements in F5 and F7 confirmed that tight local refinement and boundary exploitation are highly effective when structure exists. In contrast, functions such as F1 showed that not all problems are learnable within limited query budgets, highlighting the limitations of surrogate-based approaches.
 
-The campaign showed that no single acquisition rule works across all functions.
-Each landscape required its own configuration, informed by accumulated
-observations rather than applied uniformly. Late-campaign strategic adjustments
-— including the Week 12 fixed submission for F5 and the Week 13 filterTopK
-expansion for F7 — delivered meaningful improvements even in the final rounds,
-demonstrating that careful analysis remains valuable throughout the campaign.
+A key takeaway is that no single acquisition strategy works across all functions. Performance improved only when each function was treated individually and adjusted based on observed patterns rather than relying on a fixed global configuration.
+
+Late-stage adjustments, such as fixing F5 to the boundary and applying filtered training sets for F7, showed that meaningful gains are still possible even in the final iterations. This reinforces the importance of continuous analysis rather than assuming convergence too early.
+
+---
+
+## Final Strategy Reflection
+
+The most effective strategies were simple but adaptive.
+
+Key elements were:
+* Tight local refinement after identifying reliable regions
+* Expected Improvement for stable landscapes
+* Top K filtering to reduce noise from early exploration
+* Function-specific tuning instead of a single global setup
+* Boundary locking for Function 5
+
+The project also showed the limits of Gaussian Processes. Some functions were learnable, while others remained unstable despite multiple strategies.
+
+The main lesson is that optimisation depends on recognising structure. A strong strategy is not the most complex one, but the one that adapts when the model is no longer reliable.
+
 
 The full project implementation, weekly reports, datasheet, model card, and all
 submission data are available on GitHub:
