@@ -32,6 +32,7 @@ Weekly progress is documented in:
 
 - [Dataset Datasheet](capstone/docs/datasheet.md)
 - [Model Card](capstone/docs/model_card.md)
+- [Method Summary Notebook](capstone/notebooks/method_summary.ipynb)
 
 ---
 
@@ -51,7 +52,7 @@ Weekly progress is documented in:
 
 Each function receives an input vector:
 
-x1 – x2 – ... – xn
+x1, x2, ..., xn
 
 Where:
 - xi ∈ [0, 1)
@@ -129,144 +130,15 @@ Exploration–exploitation balance is adjusted per landscape:
 
 ---
 
-## Evolution of Strategy
+## Strategy Evolution
 
-### Week 1–2
-Baseline GP with mixed acquisition functions.
-Exploration-heavy to understand global structure.
+The optimisation strategy evolved in three main phases:
 
-### Week 3
-Hybrid strategy. Function-specific adjustments introduced.
+- **Exploration phase:** Broad sampling using multiple acquisition functions to understand the global structure.
+- **Hybrid phase:** Function-specific tuning and mixed exploration–exploitation strategies as patterns emerged.
+- **Exploitation phase:** Tight local refinement around confirmed high-performing regions, including boundary exploitation and Top K filtering.
 
-### Week 4
-Stabilisation phase.
-
-- Target normalisation activated
-- Function-specific kernel tuning
-- Controlled UCB recovery for unstable functions
-- Increased local sampling density
-
-### Week 5
-Refinement and code quality improvements.
-
-- Fixed surrogate miscalibration in Function 2
-- Restricted sampling to dominant centre
-- Cleaned numerical redundancies
-- Improved GP inference stability
-
-Function 5 and Function 7 showed consistent improvement.
-
-### Week 6
-Strategic divergence by function:
-
-- Preserved aggressive exploitation for F5 and F7 using Expected Improvement
-- Reintroduced uncertainty-guided recovery for F2 using UCB with moderate kappa
-- Introduced spread-based sampling for F1 after repeated near-zero outputs
-- Applied uncertainty-driven exploration for F4 which resulted in a major improvement
-
-### Week 7
-Recovery and exploitation consolidation.
-
-- Replaced spread-based sampling for F1 with EI-driven local search
-- Maintained single-centre constraint for F2 with tight local sampling
-- Reduced UCB kappa for F4 to consolidate positive region found in Week 6
-- Reset F6 to variance-driven exploration after UCB failed to hold gains
-- Reduced UCB kappa for F8 to limit over-exploration
-- F5 continues strong upward trend with GP predicting above 3900
-
-### Week 8
-Targeted hyperparameter tuning and controlled recovery.
-
-- Replaced pure variance exploration for F1 with UCB to balance uncertainty and predicted value
-- Relaxed the overly tight local search for F2 by reducing local fraction and increasing exploration pressure
-- Expanded local sampling range for F3 to avoid premature convergence around weak signals
-- Reduced UCB exploration pressure for F4 to refine the positive region discovered in Week 6
-- Continued aggressive EI-based boundary refinement for F5 after strong peak expansion
-- Switched F6 from variance exploration to UCB recovery to avoid random low-value regions
-- Maintained EI-driven local refinement for F7 after steady improvements
-- Slightly reduced local sampling pressure for F8 to prevent over-concentration in high dimensions
-
-### Week 9
-Full exploitation phase — 4 weeks remaining.
-
-- Increased candidate count to 150k for finer search resolution
-- Switched F3 and F4 to tighter local sampling around confirmed best regions
-- F4 moved from EI to UCB with low kappa to manage high surrogate uncertainty
-- F7 and F8 fully switched to EI for stable local refinement
-- F2 kappa reduced further to prevent excursions from high-value region
-- F5 continues exploitation near upper search boundary
-
-### Week 10
-Final exploitation phase — 3 weeks remaining.
-
-- Switched F1 from spread to EI, targeting the only observed non-zero region
-- Switched F2 from UCB to EI with localStd=0.006 for precise boundary targeting
-- Introduced F5-specific candidate generation — x1 free, x2/x3/x4 pinned to 0.999999 boundary
-- Tightened localStd for F3, F7 and F8 to narrow exploitation around confirmed peaks
-- Switched F4 from UCB to EI with topK=1 constraint
-
-### Week 11
-Maximum exploitation — 2 weeks remaining.
-
-- Tightened localStd further for F2 (0.005), F3 (0.010), F7 (0.015) and F8 (0.018)
-- Applied topK=1 constraint to F1, F2, F3, F4 and F8
-- F1 EI targeting the only observed non-zero region
-- F4 and F6 continued with tight local refinement despite high surrogate uncertainty
-- F5 boundary-pinned candidate generation maintained
-
-### Week 12
-Final round — maximum exploitation with structural improvements.
-
-- Increased candidate count to 200k for finest search resolution
-- Added per-function GP model parameters via getModelParams() — separate lengthScale and noiseLevel per function
-- Added filterTopK() to fit GP on recent high-value observations only, reducing noise from early exploratory queries
-- F5 fixed to 0.999999-0.999999-0.999999-0.999999 based on boundary ridge evidence
-- F2 and F3 single-centre EI with very tight localStd (0.005, 0.004)
-- F8 switched to UCB with kappa=0.0 and wider localStd after EI failed to calibrate in 8D
-- buildCandidatesF1 introduced — dual-centre sampling around best and most informative observed point
-
-### Week 13
-Final submission — last iteration, full exploitation lock-in.
-
-- Maintained high candidate count (200k) for maximum resolution in final search
-- Applied strict EI-based local exploitation across all stable functions (F2, F3, F4, F7)
-- Further reduced localStd for F2, F3 and F7 to ensure ultra-tight refinement around confirmed peaks
-- Introduced F1-specific dual-centre + mirror sampling to attempt final recovery of flat landscape
-- Stabilised F4 by reverting from high-uncertainty regions back to previously successful cluster
-- Maintained UCB with moderate kappa for F6 as the only remaining recoverable function
-- Preserved F8 near-peak region with low-exploration UCB configuration
-- Locked F5 to boundary optimum (all dimensions = 0.999999), based on consistent ridge behaviour across multiple weeks
-
-### Final
-Campaign conclusion — final round with targeted refinements.
-
-- Reduced filterTopK limits for F2 and F6 to 10 observations for tighter local GP calibration
-- Added filterTopK(10) for F7 — excluded early exploratory queries that were misleading the surrogate
-- F4 switched from UCB to EI with single-centre constraint around the Week 8 peak
-- buildCandidatesF1 extended with a mirror centre at (0.580, 0.536) as a speculative final attempt
-- F5 continued fixed boundary submission, locking in the Week 12 record
-- F7 achieved a new campaign best of 3.181, confirming the value of late-stage filterTopK adjustments
-
-The final iteration prioritised reliability over exploration, ensuring all queries remained within validated high-performing regions while allowing minimal controlled recovery where justified.
-
-**Final campaign results:**
-
-| Function | Dim | Week 1 Best | Final Best | Change |
-|----------|-----|-------------|------------|--------|
-| F1 | 2 | ~0 | ~0 | No improvement |
-| F2 | 2 | 0.641 | 0.663 | +3.4% |
-| F3 | 3 | -0.483 | -0.009 | Major improvement |
-| F4 | 4 | -31.18 | +0.482 | Major improvement |
-| F5 | 4 | 1163.7 | 8662.4 | +644% |
-| F6 | 5 | -2.75 | -0.413 | Major improvement |
-| F7 | 6 | 2.27 | 3.181 | +40.1% |
-| F8 | 8 | 9.31 | 9.675 | +3.9% |
-
-Seven out of eight functions showed meaningful improvement over the 13-week
-campaign. The strongest result was Function 5 with a 644% gain from the Week 1
-baseline, confirming the value of the boundary exploitation strategy. Function 1
-remained the single unresolved case — 13 rounds of varied acquisition strategies
-produced no identifiable high-value region.
+Detailed week-by-week decisions are documented in the reports section.
 
 ---
 
@@ -280,6 +152,14 @@ This project explicitly balances:
 - Global coverage vs trust-region refinement
 
 High-dimensional functions (6D–8D) required tighter local refinement and controlled uncertainty handling.
+
+---
+
+## Data Availability
+
+The original weekly query results and intermediate `.npy` datasets are not included in this repository, as they were generated through the course platform.
+
+The repository focuses on documenting the optimisation process, code, reports, and final results. Reproducing exact numerical results requires access to the original query outputs.
 
 ---
 
@@ -337,10 +217,10 @@ Some functions showed clear patterns and were successfully optimised, while othe
 ## Reproducibility
 
 To reproduce results, run the weekly scripts in the `capstone/src` folder. 
+The provided scripts demonstrate the full optimisation logic and decision pipeline.
 Note that results may slightly vary due to stochastic candidate generation 
 unless a random seed is fixed.
 
-The full project implementation, weekly reports, datasheet, model card, and all
-submission data are available on GitHub:
+The full project implementation, weekly reports, datasheet, model card, method summary notebook, and final visualisations are available on GitHub.
 
 https://github.com/absoyak/imperial-ml-ai-capstone
