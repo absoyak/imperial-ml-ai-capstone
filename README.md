@@ -216,11 +216,8 @@ Some functions showed clear patterns and were successfully optimised, while othe
 
 ## Reproducibility
 
-To reproduce results, run the weekly scripts in the `capstone/src` folder. 
-The provided scripts demonstrate the full optimisation logic and decision pipeline.
-Note that results may slightly vary due to stochastic candidate generation 
-unless a random seed is fixed.
+To reproduce results, run the weekly scripts in the `capstone/src` folder. The provided scripts demonstrate the full optimisation logic and decision pipeline. Note that results may slightly vary due to stochastic candidate generation unless a random seed is fixed.
 
-The full project implementation, weekly reports, datasheet, model card, method summary notebook, and final visualisations are available on GitHub.
+A lightweight method walkthrough is also provided in the [Method Summary Notebook](capstone/notebooks/method_summary.ipynb), which demonstrates the core Gaussian Process and acquisition logic using synthetic data and visualises the final results.
 
-https://github.com/absoyak/imperial-ml-ai-capstone
+The full project implementation, weekly reports, datasheet, model card, and final visualisations are available in this repository.
